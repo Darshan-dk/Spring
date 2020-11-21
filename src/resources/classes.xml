@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation=" http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+
+ <bean class="java.lang.String"  id="string" ></bean>
+ <bean class = "java.lang.Exception" id="exception"></bean>
+ <bean class = "java.lang.Thread" id="thread"></bean>
+  <bean class = "java.lang.StringBuffer" id="stringBuffer"></bean>
+  <bean class = "java.lang.StringBuilder" id="stringBuilder"></bean>
+    <bean class = "java.lang.Error" id="error"></bean>
+   <bean class = "sun.util.resources.CalendarData" id="calendarData"></bean>
+   <bean class = "javafx.scene.transform.Scale" id="scale"></bean>
+   <bean class = "java.util.concurrent.Phaser" id="phaser"></bean>
+     <bean class = "java.util.Date" id="date"></bean>
+  
+
+</beans>
