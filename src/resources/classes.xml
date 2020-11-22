@@ -17,6 +17,7 @@
    <bean class = "javafx.scene.transform.Scale" id="scale"></bean>
    <bean class = "java.util.concurrent.Phaser" id="phaser"></bean>
      <bean class = "java.util.Date" id="date"></bean>
-  
+   
+  <bean class = "java.util.Stack" id="stack"></bean>
 
 </beans>
