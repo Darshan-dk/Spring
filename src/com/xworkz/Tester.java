@@ -7,7 +7,7 @@ public class Tester {
 	
 	public static void main(String[] args) {
 		
-		String confiFile = "resources/counstructor.xml";
+		String confiFile = "resources/constructor.xml";
 		ApplicationContext spring = new ClassPathXmlApplicationContext(confiFile);
 		Season refOfFestival=spring.getBean("season" ,Season.class);		
 		Season twoParameter=spring.getBean("twoConstruct" ,Season.class);
