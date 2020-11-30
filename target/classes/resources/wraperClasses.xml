@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation=" http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+	<bean class="java.lang.String" id ="string"><constructor-arg value="Darshan"/></bean>
+	<bean class="java.lang.Integer" id ="integer"><constructor-arg value="55"/></bean>
+	<bean class="java.lang.Byte" id ="byte"><constructor-arg value="2"/></bean>
+	<bean class="java.lang.Short" id ="short"><constructor-arg value="210"/></bean>
+	<bean class="java.lang.Boolean" id ="bool"><constructor-arg value="false"/></bean>
+	<bean class="java.lang.Character" id ="char"><constructor-arg value="a"/></bean>
+	<bean class="java.lang.Double" id ="dbl"><constructor-arg value="12.358998"/></bean>
+	<bean class="java.lang.Float" id ="ft"><constructor-arg value="12.358"/></bean>
+	<bean class="java.lang.Long" id ="lg"><constructor-arg value="445545835"/></bean>
+
+</beans>
