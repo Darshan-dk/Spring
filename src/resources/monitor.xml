@@ -11,14 +11,10 @@
 	<bean class="com.xworkz.monitor.MonitorFactory" id ="constructor">
 	<constructor-arg value="40"/>
 	<constructor-arg value="30"/>
-	</bean>
-	
-	<bean class="com.xworkz.monitor.MonitorFactory" id="setter">
 	<property name="modelNo" value = "asdffd"></property>
-	
-		</bean>
-	<bean class="com.xworkz.monitor.MonitorFactory" id="setterMfgDate">
 	<property name="mfgDate" value = "asdffd"></property>
 	</bean>
+	
+	
 	
 </beans>

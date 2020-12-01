@@ -7,8 +7,8 @@ public class Tester {
 	public static void main(String[] args) {
 		String configFile = "resources/monitor.xml";
 		ApplicationContext spring = new ClassPathXmlApplicationContext(configFile);
-		MonitorFactory setter = spring.getBean("setter",MonitorFactory.class);
-		MonitorFactory setterMfgDate = spring.getBean("setterMfgDate",MonitorFactory.class);
+//		MonitorFactory setter = spring.getBean("setter",MonitorFactory.class);
+//		MonitorFactory setterMfgDate = spring.getBean("setterMfgDate",MonitorFactory.class);
 
 	
 	}
