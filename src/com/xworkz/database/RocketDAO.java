@@ -1,72 +1,90 @@
 package com.xworkz.database;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-public class DatabaseObject {
+public class RocketDAO {
 
 	private String username;
 	private String password;
 	private String url;
 	private String driverClass;
 
-	public DatabaseObject() {
+	Connection connection = null;
+
+	public RocketDAO() {
 		System.out.println("Created " + this.getClass().getSimpleName());
 	}
 
-	public DatabaseObject(String url, String driverClass) {
-		super();
+	public RocketDAO(String url, String driverClass) {
+
 		System.out.println("Created with url and driverClass" + this.getClass().getSimpleName());
 
 		this.url = url;
 		this.driverClass = driverClass;
 	}
 
-	public void initResource() {
-		System.out.println("this method is used to init resource like connection, file or any other resources");
+	public void initResource() throws SQLException {
+//		System.out.println("this method is used to init resource like connection, file or any other resources");
 		if (!username.isEmpty() && !password.isEmpty() && !url.isEmpty() && !driverClass.isEmpty()) {
-			System.out.println("write code to connect to db");
+			System.out.println("write code to connect to db...");
 		} else {
 			System.out.println("resources properties are not availbale");
 		}
+		connection = DriverManager.getConnection(url, this.username, this.password);
 	}
 
-	public void save() {
+	public void save(RocketDTO dto) {
 		System.out.println("saving data");
 		try {
-			Connection connection = DriverManager.getConnection(url, username, password);
-			Statement createStatement = connection.createStatement();
-
-			createStatement.execute("insert into spring_example.rocket values (3,'usa',115445.2455654)");
+			PreparedStatement statement = connection
+					.prepareStatement("insert into spring_example.rocket values(?,?,?,?)");
+			statement.setString(2, dto.getCountryName());
+			statement.setString(4, dto.getLaunchDate());
+			statement.setDouble(3, dto.getCost());
+			statement.setInt(1, dto.getId());
+			int rowsEffected = statement.executeUpdate();
+			if (rowsEffected > 0) {
+				System.out.println(" Saved successfully");
+			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 
-	public void delete() {
-		System.out.println("delete data");
+	public void delete(RocketDTO dto) {
+		System.out.println("deleting data");
 		try {
-			Connection connection = DriverManager.getConnection(url, username, password);
-			Statement createStatement = connection.createStatement();
-
-			createStatement.execute("delete from spring_example.rocket where id=1");
+			PreparedStatement statement1 = connection.prepareStatement("delete from spring_example.rocket where id=?");
+			statement1.setInt(1, dto.getId());
+			int rowsDeleted = statement1.executeUpdate();
+			if (rowsDeleted > 0) {
+				System.out.println(" deleted successfully");
+			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 
-	public void update() {
+	public void update(RocketDTO dto) {
 		System.out.println("Updating data");
 		try {
-			Connection connection = DriverManager.getConnection(url, username, password);
-			Statement createStatement = connection.createStatement();
 
-			createStatement.execute("update spring_example.rocket set name='india' where id=2");
+			PreparedStatement statement = connection
+					.prepareStatement("update spring_example.rocket set countryName=? where id=?");
+			statement.setInt(2, dto.getId());
+			statement.setString(1, dto.getCountryName());
+			int rowsEffected = statement.executeUpdate();
+			if (rowsEffected > 0) {
+				System.out.println(" Updated successfully");
+			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -83,10 +101,11 @@ public class DatabaseObject {
 				int id = res.getInt(1);
 				String name = res.getString(2);
 				Double cost = res.getDouble(3);
+				String date = res.getString(4);
 
-				System.out.println(id + " " + name + " " + cost);
+				System.out.println(id + "	" + name + "	" + cost+"	  "+date);
 			}
-
+			System.out.println("Fetching completed");
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -99,12 +118,12 @@ public class DatabaseObject {
 	}
 
 	public void setUsername(String username) {
-		System.out.println("invoked setUsername" + username);
+		System.out.println("invoked setUsername :" + username);
 		this.username = username;
 	}
 
 	public void setPassword(String password) {
-		System.out.println("invoked setPassword" + password);
+		System.out.println("invoked setPassword :" + password);
 		this.password = password;
 	}
 
