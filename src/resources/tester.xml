@@ -5,7 +5,9 @@
 	xsi:schemaLocation=" http://www.springframework.org/schema/beans 
 	http://www.springframework.org/schema/beans/spring-beans.xsd
 	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
-
+	
+	
+	<import resource="datasource.xml"/>
 	<bean class="com.xworkz.dao.CoronaVaccineDAO" id="dto">
 		<constructor-arg ref="lsfb"></constructor-arg>
 	</bean>
@@ -18,10 +20,10 @@
 		<property name="hibernateProperties">
 			<props>
 			<prop key="hibernate.show_sql">true</prop>
-				<prop key="hibernate.connection.driver_class">com.mysql.cj.jdbc.Driver</prop>
+				 <prop key="hibernate.connection.driver_class">com.mysql.cj.jdbc.Driver</prop>
 				<prop key="hibernate.connection.url">jdbc:mysql://localhost:3306/spring_example</prop>
 				<prop key="hibernate.connection.username">root</prop>
-				<prop key="hibernate.connection.password">d441126k</prop>
+				<prop key="hibernate.connection.password">d441126k</prop> 
 				<prop key="hibernate.hbm2ddl.auto">update</prop>
 			</props>
 		</property>
@@ -29,9 +31,8 @@
 			<list>
 				<value>com.xworkz.dto.CoronaVaccineDTO</value>
 			</list>
-
-
 		</property> 
+ 		<property name="dataSource" ref="DriverManagerDataSource"></property>
 	</bean>
 
 

@@ -11,15 +11,16 @@ public class Tester {
 		dto.setCountry("India");
 		dto.setDevelopedBy("russia");
 		dto.setName("df");
+		dto.setReadyToUse(true);
 		
 		
 		
 		dto.setReadyToUse(true);
 		
-		CoronaVaccineDAO dao = new CoronaVaccineDAO();
-		dao.save(dto);
-		
-		
+//		CoronaVaccineDAO dao = new CoronaVaccineDAO();
+//		dao.save(dto);
+//		
+//		
 	}
 
 }

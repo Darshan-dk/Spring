@@ -1,5 +1,7 @@
 package com.xworkz.dto;
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -10,12 +12,14 @@ import org.hibernate.annotations.GenericGenerator;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 @Entity
 @Table(name="corona_vaccine")
 @Getter
 @Setter
-public class CoronaVaccineDTO {
+@ToString
+public class CoronaVaccineDTO implements Serializable {
 	
 	
 	@Id
