@@ -23,7 +23,7 @@ public class SpringTester {
 //			vaccineDAO.save(dto);
 //			vaccineDAO.update(5, "xyz");
 //			vaccineDAO.fetch(5);
-			vaccineDAO.delete(6);
+			vaccineDAO.delete(7);
 
 		}
 
