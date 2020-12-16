@@ -1,4 +1,4 @@
-package com.xworkz.dao;
+package com.xworkz.config.dao;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -7,7 +7,7 @@ import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
-import com.xworkz.dto.CoronaVaccineDTO;
+import com.xworkz.config.dto.CoronaVaccineDTO;
 
 public class CoronaVaccineDAO {
 
@@ -48,15 +48,20 @@ public class CoronaVaccineDAO {
 		Session session = null;
 		Transaction transaction = null;
 
-		session = factory.openSession();
-		transaction = session.beginTransaction();
-		CoronaVaccineDTO dto1 = session.get(CoronaVaccineDTO.class, vaccineId);
-		if (dto1 != null) {
-			dto1.setName(name);
-			session.update(dto1);
+		try {
+			session = factory.openSession();
+			transaction = session.beginTransaction();
+			CoronaVaccineDTO dto1 = session.get(CoronaVaccineDTO.class, vaccineId);
+			if (dto1 != null) {
+				dto1.setName(name);
+				session.update(dto1);
+			}
+			transaction.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			session.close();
 		}
-		transaction.commit();
-		session.close();
 
 	}
 
@@ -77,29 +82,40 @@ public class CoronaVaccineDAO {
 //		}
 //		
 //	}
-	public void fetch(long vaccineId) {
+	public void fetchById(long vaccineId) {
 		Session session = null;
 		Transaction transaction = null;
 
-		session = factory.openSession();
-		transaction = session.beginTransaction();
-		CoronaVaccineDTO dto1 = session.get(CoronaVaccineDTO.class, vaccineId);
-		System.out.println(dto1);
-		session.close();
+		try {
+			session = factory.openSession();
+			transaction = session.beginTransaction();
+			CoronaVaccineDTO dto1 = session.get(CoronaVaccineDTO.class, vaccineId);
+			System.out.println(dto1);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			session.close();
+		}
 
 	}
 
-	public void delete(long vaccineId) {
+	public void deleteById(long vaccineId) {
 		Session session = null;
 		Transaction transaction = null;
 
-		session = factory.openSession();
-		transaction = session.beginTransaction();
-		CoronaVaccineDTO dto1 = session.get(CoronaVaccineDTO.class, vaccineId);
-		session.delete(dto1);
-		transaction.commit();
-		session.close();
-
+		try {
+			session = factory.openSession();
+			transaction = session.beginTransaction();
+			CoronaVaccineDTO dto1 = session.get(CoronaVaccineDTO.class, vaccineId);
+			session.delete(dto1);
+			transaction.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			session.close();
+		}
 	}
+
+	
 
 }

@@ -8,7 +8,7 @@
 
 
 	<import resource="datasource.xml" />
-	<bean class="com.xworkz.dao.CoronaVaccineDAO" id="dto">
+	<bean class="com.xworkz.config.dao.CoronaVaccineDAO" id="dao">
 		<constructor-arg ref="lsfb"></constructor-arg>
 	</bean>
 
@@ -28,13 +28,13 @@
 		</property>
 		<property name="annotatedClasses">
 			<list>
-				<value>com.xworkz.dto.CoronaVaccineDTO</value>
+				<value>com.xworkz.config.dto.CoronaVaccineDTO</value>
 			</list>
 		</property>
 		<property name="dataSource" ref="DriverManagerDataSource"></property>
 	</bean>
-
-
-
-
+	
+	<bean class ="com.xworkz.config.service.CoronaVaccineService" id="CoronaVaccineService">
+	<constructor-arg ref="dao" ></constructor-arg>
+	</bean>
 </beans>
