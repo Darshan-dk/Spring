@@ -1,0 +1,6 @@
+.project
+.settings
+buil/
+target/
+.classpath
+.git
