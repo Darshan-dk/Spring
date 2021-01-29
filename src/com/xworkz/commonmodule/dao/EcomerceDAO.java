@@ -7,4 +7,6 @@ public interface EcomerceDAO {
 
 	public int save(EcommerceDTO dto) throws RepositoryException;
 
+	public long fetchEmailCount(EcommerceDTO dto) throws RepositoryException;
+
 }

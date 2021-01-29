@@ -58,7 +58,8 @@ body, html {
   </div>
   
 </nav>
-<form class="bag-img">
+<form class="bag-img" action="login.do" method="post" id="form"
+		onsubmit="return login()">
   <div class="row justify-content-center">
     <label for="inputEmail3" class="col-sm-2 mt-5 col-form-label text-light">Email</label>
     <div class="col-sm-4 mt-5">
@@ -74,8 +75,7 @@ body, html {
   
   <div class="row justify-content-center">
     <div class="col-sm-6 mt-2">
-<!--       <button type="submit" class="btn btn-primary">Login</button> -->
-				<a href="#link" class="btn btn-info" role="button">Login</a>
+				<input type="submit" class="btn btn-primary" value="Login" />
 				<a href="ForgotPassword.jsp" class="btn btn-info" role="button">Forgot Password</a>
 	
       
