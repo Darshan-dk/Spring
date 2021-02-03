@@ -94,25 +94,32 @@ public class EcomerceController {
 	public String doLogin(@ModelAttribute EcommerceDTO dto, @ModelAttribute LoginDTO loginDTO, Model m)
 			throws ControllerException {
 		try {
-			List<EcommerceDTO> list = ecommerceService.loginDetails(dto);
-			String message = ecommerceService.validateAndLogin(dto, loginDTO);
-
+			List<EcommerceDTO> list=ecommerceService.loginDetails(dto);
+			String message = ecommerceService.validateAndLogin(dto,loginDTO);
+			
 			for (EcommerceDTO eCommerceDTO : list) {
-
+				
 				logger.debug(message);
-				if (message.equals("matching")) {
-					m.addAttribute("message", "Welcome " + eCommerceDTO.getFirstName());
+				if(message.equals("matching")){
+					m.addAttribute("message","Hi "+eCommerceDTO.getFirstName());
 					return "Home";
 				}
 			}
-
-			if (message.equals("notMatching")) {
-				m.addAttribute("message", "password and confirm password matching");
-				return "Login";
+			
+			if(message.equals("notMatching")){
+				m.addAttribute("message","Incorrect password you only have 3 attempts");
+				return "LoginPage";
 			}
-			if (message.equals("notRegistered")) {
-				m.addAttribute("message", "This is not a registered email");
-				return "Login";
+			if(message.equals("trialsExceeded")){
+				m.addAttribute("message","Password attempts exceeded your account will be locked, please use forgot password");
+				return "LoginPage";
+			}
+			if(message.equals("locked")){
+				m.addAttribute("message","Your account is locked, please use forgot password");
+				return "LoginPage";
+			}if(message.equals("notRegistered")){
+				m.addAttribute("message","This is not a registered email");
+				return "LoginPage";
 			}
 
 		} catch (ServiceException e) {
@@ -120,16 +127,16 @@ public class EcomerceController {
 		} catch (Exception e) {
 			throw new ControllerException(e.getMessage());
 		}
-		return "Login";
+		return "LoginPage";
 
 	}
 
 	@RequestMapping(value = "forgot.do", method = RequestMethod.POST)
-	public String forgot(@ModelAttribute EcommerceDTO commerceDTO, Model m) throws ControllerException {
+	public String forgot(@ModelAttribute EcommerceDTO commerceDTO,LoginDTO dto1, Model m) throws ControllerException {
 
 		try {
 			System.out.println("invoked forgot.do");
-			boolean reset = ecommerceService.resetPassword(commerceDTO);
+			boolean reset = ecommerceService.resetPassword(commerceDTO, dto1);
 			if (!reset) {
 				m.addAttribute("message", "This email is not registered");
 				return "ForgotPassword";

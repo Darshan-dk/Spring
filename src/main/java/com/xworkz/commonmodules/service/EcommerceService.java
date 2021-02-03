@@ -16,7 +16,8 @@ public String validateAndLogin(EcommerceDTO dto,LoginDTO loginDTO) throws Servic
 	
 	boolean isValidUser(EcommerceDTO dto) throws ServiceException;
 
-	boolean resetPassword(EcommerceDTO dto) throws ServiceException;
+	public boolean resetPassword(EcommerceDTO dto, LoginDTO loginDTO) throws ServiceException, com.xworkz.commonmodules.exception.ServiceException ;
+	
 
 	String validateAndUpdatePassword( ResetDTO resetDTO) throws ServiceException;
 

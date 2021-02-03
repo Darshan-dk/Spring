@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.xworkz.commonmodules.dto.EcommerceDTO;
+import com.xworkz.commonmodules.dto.LoginDTO;
 import com.xworkz.commonmodules.dto.ResetDTO;
 import com.xworkz.commonmodules.exception.RepositoryException;
 
@@ -236,5 +237,135 @@ public class EcomerceDaoImpl implements EcomerceDAO {
 		}
 		
 	}
+	@Override
+	public  Integer updateLoginFailCount(LoginDTO dto) throws RepositoryException {
+		Session session = null;
+		int status = 0;
+		Transaction transaction=null;
+		try {
+			session = factory.openSession();
+			transaction=session.beginTransaction();
+			Query query = session.createQuery("update EcommerceDTO set invalidLoginCount=invalidLoginCount+1 where email=:e");
+			query.setParameter("e", dto.getEmail());
+			
+			 status=query.executeUpdate();
+			//logger.debug(status);
+			transaction.commit();
+		}catch (HibernateException e) {
+			transaction.rollback();
+			throw new RepositoryException(e.getMessage());
+
+		} catch (Exception e) {
+			throw new RepositoryException(e.getMessage());
+		} finally {
+			session.close();
+		}
+		
+		return null;}
+	
+	@Override
+	public void updateLoginFailCountToZero(String email) throws RepositoryException {
+		Session session = null;
+		int status = 0;
+		Transaction transaction=null;
+		try {
+			session = factory.openSession();
+			transaction=session.beginTransaction();
+			Query query = session.createQuery("update EcommerceDTO set invalidLoginCount=:c where email=:e");
+			query.setParameter("c", 0);
+			query.setParameter("e", email);
+			
+			 status=query.executeUpdate();
+			//logger.debug(status);
+			transaction.commit();
+		}catch (HibernateException e) {
+			transaction.rollback();
+			throw new RepositoryException(e.getMessage());
+
+		} catch (Exception e) {
+			throw new RepositoryException(e.getMessage());
+		} finally {
+			session.close();
+		}
+	}
+	@Override
+	public void accountUnlocking(String email) throws RepositoryException {
+		Session session = null;
+		int status = 0;
+		Transaction transaction=null;
+		try {
+			session = factory.openSession();
+			transaction=session.beginTransaction();
+			Query query = session.createQuery("update EcommerceDTO set accountStatusLocked=:c where email=:e");
+			query.setParameter("c",false);
+			query.setParameter("e", email);
+			
+			 status=query.executeUpdate();
+			//logger.debug(status);
+			transaction.commit();
+		}catch (HibernateException e) {
+			transaction.rollback();
+			throw new RepositoryException(e.getMessage());
+
+		} catch (Exception e) {
+			throw new RepositoryException(e.getMessage());
+		} finally {
+			session.close();
+		}
+	};
+
+	@Override
+	public void updateAccountLockedToFalse(String email) throws RepositoryException {
+		Session session = null;
+		int status = 0;
+		Transaction transaction=null;
+		try {
+			session = factory.openSession();
+			transaction=session.beginTransaction();
+			Query query = session.createQuery("update EcommerceDTO set accountStatusLocked=:b where email=:e");
+			query.setParameter("b", false);
+			query.setParameter("e", email);
+			
+			 status=query.executeUpdate();
+			//logger.debug(status);
+			transaction.commit();
+		}catch (HibernateException e) {
+			transaction.rollback();
+			throw new RepositoryException(e.getMessage());
+
+		} catch (Exception e) {
+			throw new RepositoryException(e.getMessage());
+		} finally {
+			session.close();
+		}
+	};
+	
+	@Override
+	public  boolean updateAccountLocked(LoginDTO loginDTO) throws RepositoryException {
+		Session session = null;
+		int status = 0;
+		Transaction transaction=null;
+		try {
+			session = factory.openSession();
+			transaction=session.beginTransaction();
+			Query query = session.createQuery("update EcommerceDTO set accountStatusLocked=:b where email=:e");
+			query.setParameter("b", true);
+			query.setParameter("e", loginDTO.getEmail());
+			
+			 status=query.executeUpdate();
+			//logger.debug(status);
+			transaction.commit();
+		}catch (HibernateException e) {
+			transaction.rollback();
+			throw new RepositoryException(e.getMessage());
+
+		} catch (Exception e) {
+			throw new RepositoryException(e.getMessage());
+		} finally {
+			session.close();
+		}
+		return false;};
+		
+		
 
 }

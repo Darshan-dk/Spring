@@ -18,11 +18,11 @@ import lombok.ToString;
 @Setter
 @ToString
 @Entity
-@Table(name="Ecomerce_data")
+@Table(name = "Ecomerce_data")
 public class EcommerceDTO implements Serializable {
-	
+
 	@Id
-	@GenericGenerator(name= "ref", strategy="increment")
+	@GenericGenerator(name = "ref", strategy = "increment")
 	@GeneratedValue(generator = "ref")
 	private int id;
 	private String firstName;
@@ -31,11 +31,16 @@ public class EcommerceDTO implements Serializable {
 	private String password;
 	@Transient
 	private String repassword;
-	
+	private int invalidLoginCount;
+	private boolean accountStatusLocked;
+
 	public EcommerceDTO() {
 		// TODO Auto-generated constructor stub
-		System.out.println("Invoked "+this.getClass().getSimpleName());
+		System.out.println("Invoked " + this.getClass().getSimpleName());
 	}
-
+	
+	public boolean isAccountStatusLocked() {
+		return accountStatusLocked;
+	}
 
 }

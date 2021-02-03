@@ -127,35 +127,59 @@ public class EcommerceServiceImpl implements EcommerceService {
 
 	public String validateAndLogin(EcommerceDTO dto,LoginDTO loginDTO) throws ServiceException {
 		String message=null;
+		boolean accountLocked=false;
+		int failedLogin=0;
 		try {
 			List<EcommerceDTO> list = dao.fetchRow(dto);
-			String p = dao.fetchPassword(dto);
 			
 			
-			if (list.size() == 1) {
+			for (EcommerceDTO eCommerceDTO : list) {
+			accountLocked=eCommerceDTO.isAccountStatusLocked();
+			
+			logger.info("Account locked "+accountLocked);
+			
+			if(accountLocked==false){
+					if (list.size() == 1) {
 
-				for (EcommerceDTO eCommerceDTO : list) {
+						logger.info(eCommerceDTO.getFirstName());
+						logger.info(list.size());
 
-					logger.debug(eCommerceDTO.getFirstName());
-					logger.debug(list.size());
+						if (eCommerceDTO.getPassword().equals(loginDTO.getPassword())) {
+							logger.info("password matching");
+							dao.updateLoginFailCountToZero(loginDTO.getEmail());
+							logger.info("update login count to zero method");
+							message = "matching";
+						}
 
-					if (eCommerceDTO.getPassword().equals(loginDTO.getPassword())) {
-						logger.debug("password and confirm password matching");
+						else {
+							failedLogin= eCommerceDTO.getInvalidLoginCount();
+							
+							if (failedLogin < 3){
+								dao.updateLoginFailCount(loginDTO);
+								message="notMatching";
+								logger.info("password not matching");
+							}
+							
+							else{
+								dao.updateAccountLocked(loginDTO);
+								message = "trialsExceeded";
+								logger.info("trials exceeded");
+							}
+							
+							logger.info(eCommerceDTO);
+							}
 						
-						message="matching";
-					}
+					}else {
 
-					else {
-						logger.debug(eCommerceDTO);
-						logger.debug("password and confirm password not matching");
-						
-						message= "notMatching";
-					}
-				}
-			} else {
-				
-				logger.debug("User not registered");
-				message= "notRegistered";
+						logger.info("User not registered");
+						message = "notRegistered";
+							}
+				} if(accountLocked==true) {
+
+					logger.info("Account Locked");
+					message = "locked";
+						}
+
 			}
 			
 
@@ -182,7 +206,7 @@ public class EcommerceServiceImpl implements EcommerceService {
 	}
 
 	@Override
-	public boolean resetPassword(EcommerceDTO dto) throws ServiceException, com.xworkz.commonmodules.exception.ServiceException {
+	public boolean resetPassword(EcommerceDTO dto, LoginDTO loginDTO) throws ServiceException, com.xworkz.commonmodules.exception.ServiceException {
 		logger.debug("Invoked reset password method");
 		try {
 			long count = dao.fetchEmailCount(dto);
@@ -195,7 +219,7 @@ public class EcommerceServiceImpl implements EcommerceService {
 					logger.debug("Email sent " + sent);
 				}
 				
-				
+				dao.accountUnlocking(loginDTO.getEmail());
 
 				return true;
 			}
