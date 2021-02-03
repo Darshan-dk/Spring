@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta charset="ISO-8859-1">
-<title>Landing Page</title>
+<title>Home Page</title>
 <link rel="stylesheet"
 	href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
 	integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
@@ -13,13 +13,14 @@
 <style>
 
 .bag-img{
-	background-image: url("forgot.jpg");
+	background-image: url("home.jpg");
 	height: 100%;
 
   /* Center and scale the image nicely */
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
+  
  
 }
 body, html {
@@ -54,7 +55,7 @@ body, html {
 </svg>
 				<ul class="navbar-nav mr-auto mt-2 mt-lg-0">
 					<li class="nav-item active"><a class="nav-link"
-						href="LandingPage.jsp">Home <span class="sr-only">(current)</span></a>
+						href="LandingPage.jsp">Register <span class="sr-only">(current)</span></a>
 					</li>
 				</ul>
 
@@ -67,36 +68,18 @@ body, html {
 </svg>
 				<ul class="navbar-nav mr-auto mt-2 mt-lg-0">
 					<li class="nav-item active"><a class="nav-link"
-						href="LoginPage.jsp">Login <span class="sr-only">(current)</span></a>
+						href="LoginPage.jsp">Sign out<span class="sr-only">(current)</span></a>
 					</li>
 				</ul>
 			</form>
 		</div>
 
 	</nav>
-	<form action="forgot.do" class="bag-img" method="post">
+	
+	<div  class="bag-img">
 	<span style="color: white" > ${message}</span>	
-		<div>
-		<div class="row justify-content-center">
-			<label for="inputEmail3" class="col-sm-1 mt-5 col-form-label text-light">Email</label>
-			<div class="col-sm-4 mt-5">
-				<input type="email" class="form-control" id="email"
-					name="email" placeholder="Email">
-			</div>
-		</div>
-		</div>
-		
-
-		<div class="row justify-content-center">
-			<div class="col-sm-5 mt-2 	">
-<!-- 				<button type="submit" class="btn btn-primary">Reset</button>
- -->				<input type="submit" class="btn btn-primary" value="reset" />
-				
-			</div>
-		</div>
-
-
-	</form>
+	</div>
+	
 	 <div class="card-footer text-muted footer-dark bg-dark  ">@
 		copyright X-Workz-2021</div> 
 	<!-- <div  class="footer">
@@ -107,3 +90,7 @@ body, html {
 </body>
 
 </html>
+
+
+
+

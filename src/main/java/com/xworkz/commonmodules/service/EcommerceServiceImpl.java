@@ -1,6 +1,7 @@
 package com.xworkz.commonmodules.service;
 
 import java.sql.PreparedStatement;
+import java.util.List;
 import java.util.Objects;
 
 import org.apache.log4j.Logger;
@@ -14,6 +15,8 @@ import org.springframework.util.StringUtils;
 
 import com.xworkz.commonmodules.dao.EcomerceDAO;
 import com.xworkz.commonmodules.dto.EcommerceDTO;
+import com.xworkz.commonmodules.dto.LoginDTO;
+import com.xworkz.commonmodules.dto.ResetDTO;
 import com.xworkz.commonmodules.exception.RepositoryException;
 
 @Component
@@ -26,6 +29,9 @@ public class EcommerceServiceImpl implements EcommerceService {
 
 	@Autowired
 	private EcomerceDAO dao;
+	
+	@Autowired
+	private PasswordResetService passwordResetService;
 
 	public EcommerceServiceImpl() {
 
@@ -111,6 +117,138 @@ public class EcommerceServiceImpl implements EcommerceService {
 		return message;
 	}
 
+	@Override
+	public List<EcommerceDTO> loginDetails(EcommerceDTO dto) throws RepositoryException{
+		List<EcommerceDTO> list=dao.fetchRow(dto);
+		return list;
+		
+		
+	}
+
+	public String validateAndLogin(EcommerceDTO dto,LoginDTO loginDTO) throws ServiceException {
+		String message=null;
+		try {
+			List<EcommerceDTO> list = dao.fetchRow(dto);
+			String p = dao.fetchPassword(dto);
+			
+			
+			if (list.size() == 1) {
+
+				for (EcommerceDTO eCommerceDTO : list) {
+
+					logger.debug(eCommerceDTO.getFirstName());
+					logger.debug(list.size());
+
+					if (eCommerceDTO.getPassword().equals(loginDTO.getPassword())) {
+						logger.debug("password and confirm password matching");
+						
+						message="matching";
+					}
+
+					else {
+						logger.debug(eCommerceDTO);
+						logger.debug("password and confirm password not matching");
+						
+						message= "notMatching";
+					}
+				}
+			} else {
+				
+				logger.debug("User not registered");
+				message= "notRegistered";
+			}
+			
+
+		} catch (RepositoryException e) {
+
+			throw new ServiceException(e.getMessage());
+		}
+		return message;
+
+	}
+
+	@Override
+	public boolean isValidUser(EcommerceDTO dto) throws ServiceException {
+
+		try {
+			boolean validUser = dao.isValidUser(dto);
+			if (validUser)
+				return true;
+		} catch (RepositoryException e) {
+
+			throw new ServiceException(e.getMessage());
+		}
+		return false;
+	}
+
+	@Override
+	public boolean resetPassword(EcommerceDTO dto) throws ServiceException, com.xworkz.commonmodules.exception.ServiceException {
+		logger.debug("Invoked reset password method");
+		try {
+			long count = dao.fetchEmailCount(dto);
+			logger.debug(count);
+			if (count == 1) {
+				String oTP = dao.updatePassword(dto);
+				List<EcommerceDTO>list= dao.fetchRow(dto);
+				for (EcommerceDTO eCommerceDTO : list) {
+					boolean sent = passwordResetService.sendMail(eCommerceDTO, oTP);
+					logger.debug("Email sent " + sent);
+				}
+				
+				
+
+				return true;
+			}
+		} catch (RepositoryException e) {
+			throw new ServiceException(e.getMessage());
+		}
+		return false;
+
+	}
+
+	@Override
+	public String validateAndUpdatePassword( ResetDTO resetDTO) throws ServiceException {
+
+		logger.debug("invoked validateAndUpdatePassword");
+		String message = "NA";
+		boolean valid = false;
+		try {
+			if (!resetDTO.getPassword().isEmpty() && !resetDTO.getNewPassword().isEmpty()
+					&& !resetDTO.getCPassword().isEmpty()) {
+				valid = true;
+			}
+			if (valid) {
+				if (resetDTO.getNewPassword().equals( resetDTO.getCPassword())) {
+
+					boolean validOtp = dao.isValidOtp(resetDTO);
+					logger.debug(validOtp);
+					
+					if (validOtp) {
+						dao.resetPassword( resetDTO);
+						logger.debug("otp is valid and password updated");
+						return "valid";
+					} else {
+						logger.debug("Invalid otp");
+
+						return "invalid";
+					}
+
+				} else {
+					logger.debug("password and confirm password not matching...");
+					return "notMatching";
+				}
+			} else {
+				logger.debug("fields can't be blank");
+				return message;
+			}
+
+		} catch (RepositoryException e) {
+			throw new ServiceException(e.getMessage());
+		}
+
+	}
+
+	@Override
 	public boolean sendMail(EcommerceDTO commerceDTO) throws ServiceException {
 
 		SimpleMailMessage mailMessage = new SimpleMailMessage();
@@ -133,4 +271,11 @@ public class EcommerceServiceImpl implements EcommerceService {
 		return false;
 
 	}
+
+	
+
+
+
+	
+
 }

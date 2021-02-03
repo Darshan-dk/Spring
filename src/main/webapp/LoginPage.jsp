@@ -63,13 +63,13 @@ body, html {
   <div class="row justify-content-center">
     <label for="inputEmail3" class="col-sm-2 mt-5 col-form-label text-light">Email</label>
     <div class="col-sm-4 mt-5">
-      <input type="email" class="form-control" id="inputEmail3" placeholder="Email">
+      <input type="email" class="form-control" id="email" name="email"placeholder="Email">
     </div>
   </div>
   <div class="row justify-content-center">
     <label for="inputPassword3" class="col-sm-2  mt-1  col-form-label text-light  ">Password</label>
     <div class="col-sm-4  mt-1">
-      <input type="password" class="form-control" id="inputPassword3" placeholder="Password">
+      <input type="password" class="form-control" id="password" name="password" placeholder="Password">
     </div>
   </div>
   
