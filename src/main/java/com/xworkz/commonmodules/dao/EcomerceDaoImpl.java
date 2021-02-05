@@ -364,8 +364,67 @@ public class EcomerceDaoImpl implements EcomerceDAO {
 		} finally {
 			session.close();
 		}
-		return false;};
+		return false;
+		}
+	@Override
+	public List<EcommerceDTO> fetchRowByEmail(String email) throws RepositoryException {
+		List<EcommerceDTO> list = null;
+		Session session = null;
+		try {
+			session = factory.openSession();
+			Query query = session.createQuery("from EcommerceDTO where email=:e");
+			query.setParameter("e", email);
+			System.out.println(email);
+			//logger.info(email);
+			list = (List<EcommerceDTO>) query.list();
+			//logger.info(list.size());
+			for (EcommerceDTO eCommerceDTO : list) {
+				System.out.println(eCommerceDTO);
+				//logger.info(eCommerceDTO);
+			}
+
+		}catch (HibernateException e) {
+
+			throw new RepositoryException(e.getMessage());
+
+		} catch (Exception e) {
+			throw new RepositoryException(e.getMessage());
+		} finally {
+			session.close();
+		}
+		return list;
+	}
+	@Override
+	public void updateNameByEmail(String email, String firstName, String secondName) throws RepositoryException {
 		
+		System.out.println("updateNameByEmail invoked");
+		Session session = null;
+
+		Transaction transaction = null;
+
+		try {
+			session = factory.openSession();
+			transaction = session.beginTransaction();
+			Query query = session.createQuery("update EcommerceDTO set firstName=:f , secondName=:l where email=:e");
+			query.setParameter("f", firstName);
+			query.setParameter("l", secondName);
+			query.setParameter("e", email);
+			
+			int status = query.executeUpdate();
+			System.out.println(status);
+			//logger.debug(status);
+			transaction.commit();
+			
+		}catch (HibernateException e) {
+
+			throw new RepositoryException(e.getMessage());
+
+		} catch (Exception e) {
+			throw new RepositoryException(e.getMessage());
+		} finally {
+			session.close();
+		}
+	}
 		
 
 }

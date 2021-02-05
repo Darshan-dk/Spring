@@ -295,7 +295,30 @@ public class EcommerceServiceImpl implements EcommerceService {
 		return false;
 
 	}
-
+	@Override
+	public List<EcommerceDTO> loginDetails(String email) throws ServiceException {
+		List<EcommerceDTO> list;
+		logger.info("invoke login details method");
+		try {
+			list = dao.fetchRowByEmail(email);
+			logger.info(list);
+		} catch (RepositoryException e) {
+			throw new ServiceException(e.getMessage());
+		}
+		return list;
+		
+		
+	}
+	@Override
+	public void updateNameByEmail(String email,String fName,String lName) throws ServiceException {
+		try {
+			dao.updateNameByEmail(email,fName,lName);
+		} catch (RepositoryException e) {
+			
+			throw new ServiceException(e.getMessage());
+		}
+		
+	}
 	
 
 

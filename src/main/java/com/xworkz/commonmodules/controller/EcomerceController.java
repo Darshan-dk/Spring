@@ -10,6 +10,7 @@ import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -62,7 +63,7 @@ public class EcomerceController {
 				System.out.println("saved");
 				boolean sent = ecommerceService.sendMail(ecommerceDTO);
 				if (sent) {
-					// System.out.println("Sent succesfully");
+					// System.out.println("Sent successfully");
 					logger.debug("Sent succesfully");
 					model.addAttribute("meesage", "Mail sent successfully");
 				} else {
@@ -102,6 +103,7 @@ public class EcomerceController {
 				logger.debug(message);
 				if(message.equals("matching")){
 					m.addAttribute("message","Hi "+eCommerceDTO.getFirstName());
+					m.addAttribute( "m",eCommerceDTO);
 					return "Home";
 				}
 			}
@@ -169,6 +171,47 @@ public class EcomerceController {
 			throw new ControllerException(e.getMessage());
 		}
 		return "Reset";
+	}
+	@RequestMapping(value="/editname/{email:.+}") 
+	public String userDetails( @PathVariable("email") String email ,Model m) throws ControllerException{
+		System.out.println("invoked fetch");
+		logger.info("Invoked fetch method");
+		logger.info(email);
+		try {
+			List<EcommerceDTO> list=ecommerceService.loginDetails(email);
+			logger.info(list);
+			for (EcommerceDTO eCommerceDTO : list) {
+				m.addAttribute("list",eCommerceDTO);
+				logger.info("inside for each");
+				logger.info(eCommerceDTO.getFirstName());
+			}
+			
+		} catch (ServiceException e) {
+			throw new ControllerException(e.getMessage());
+		}
+		
+		return "UserDetails";
+		
+	}
+
+	
+	@RequestMapping(value="/update", method=RequestMethod.POST ) 
+	public String updateDetails(String email, String firstName,String secondName, Model m) throws ControllerException{
+		System.out.println("Update method is invoked");
+		logger.info("update method invoked");
+		logger.info(email);
+		System.out.println(email);
+		
+		try {
+			ecommerceService.updateNameByEmail(email, firstName, secondName);
+			System.out.println("Updatead successfully");
+			m.addAttribute("success","Update success");
+		} catch (ServiceException e) {
+			throw new ControllerException(e.getMessage());
+		}
+		
+		return "UserDetails";
+		
 	}
 
 }

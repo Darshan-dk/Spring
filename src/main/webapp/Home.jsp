@@ -11,23 +11,18 @@
 	crossorigin="anonymous">
 </head>
 <style>
-
-.bag-img{
+.bag-img {
 	background-image: url("home.jpg");
 	height: 100%;
-
-  /* Center and scale the image nicely */
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
-  
- 
+	/* Center and scale the image nicely */
+	background-position: center;
+	background-repeat: no-repeat;
+	background-size: cover;
 }
+
 body, html {
-  height: 100%;
+	height: 100%;
 }
-
-
 </style>
 
 <body>
@@ -75,13 +70,36 @@ body, html {
 		</div>
 
 	</nav>
-	
-	<div  class="bag-img">
-	<span style="color: white" > ${message}</span>	
+
+	<div class="bag-img">
+		<span  align="center" style="color: white"> ${message}</span>
+
+		<table border="5" style="color:white" 
+			cellpadding="5">
+			<tr>
+				<th>First Name</th>
+				<td>${m.firstName}</td>
+
+			</tr>
+
+
+			<tr>
+				<th>Last Name</th>
+				<td>${m.secondName}</td>
+
+			</tr>
+
+			<tr>
+
+				<td><a href="editname/${m.email}">Edit</a></td>
+
+			</tr>
+		</table>
 	</div>
-	
-	 <div class="card-footer text-muted footer-dark bg-dark  ">@
-		copyright X-Workz-2021</div> 
+	<form></form>
+
+	<div class="card-footer text-muted footer-dark bg-dark  ">@
+		copyright X-Workz-2021</div>
 	<!-- <div  class="footer">
 		<p class="text-light">@copyright X-workz 2021</p>
 	</div> -->

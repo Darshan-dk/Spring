@@ -9,6 +9,40 @@
 	href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
 	integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
 	crossorigin="anonymous">
+	
+	<script type="text/javascript">
+function loginValidate(){
+	
+	var email = document.getElementById("email").value
+	var password=document.getElementById("password").value
+	var regex=/^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
+	
+	if(email ==null||email==""){
+		document.getElementById("err_email").innerHTML="Email field can't be blank"
+		return false;
+	}
+	if(!(email ==null||email=="")){
+		document.getElementById("err_email").innerHTML=""
+		
+	}if(!(email.match(regex))){
+		document.getElementById("err_email").innerHTML="Email is not valid"
+		return false;
+	}
+	if((email.match(regex))){
+		document.getElementById("err_email").innerHTML=""
+	}
+	if(password===null||password===""||password.trim().length==0){
+		document.getElementById("err_pass").innerHTML="Password can't be null"
+			return false;
+	}
+	if(!(password==null||password=="")){
+		document.getElementById("err_pass").innerHTML=""
+			
+	}
+	}
+</script>
+	
+	
 </head>
 
 <style>
@@ -60,25 +94,27 @@ body, html {
 </nav>
 
 <form class="bag-img" action="login.do" method="post" id="form"
-		onsubmit="return login()">
+		onsubmit="return loginValidate()">
 		<span style="color: white"> ${message}</span>
   <div class="row justify-content-center">
     <label for="inputEmail3" class="col-sm-2 mt-5 col-form-label text-light">Email</label>
     <div class="col-sm-4 mt-5">
       <input type="email" class="form-control" id="email" name="email"placeholder="Email">
+      <span id="err_email" style=" color: red"></span>
     </div>
   </div>
   <div class="row justify-content-center">
     <label for="inputPassword3" class="col-sm-2  mt-1  col-form-label text-light  ">Password</label>
     <div class="col-sm-4  mt-1">
       <input type="password" class="form-control" id="password" name="password" placeholder="Password">
+      <span id="err_pass" style=" color: red"></span>
     </div>
   </div>
  
   
   <div class="row justify-content-center">
     <div class="col-sm-6 mt-2">
-				<input type="submit" class="btn btn-primary" value="Login" />
+				<input type="submit" class="btn btn-primary" value="login" />
 				<a href="ForgotPassword.jsp" class="btn btn-info" role="button">Forgot Password</a>
 	
       

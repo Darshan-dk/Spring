@@ -28,4 +28,7 @@ public interface EcomerceDAO {
 
 	public void updateAccountLockedToFalse(String email) throws RepositoryException;
 	public void accountUnlocking(String email) throws RepositoryException;
+	public void updateNameByEmail(String email, String fName, String lName) throws RepositoryException;
+	public List<EcommerceDTO> fetchRowByEmail(String email) throws RepositoryException;
+
 }

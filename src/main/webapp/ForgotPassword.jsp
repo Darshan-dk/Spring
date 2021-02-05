@@ -9,6 +9,32 @@
 	href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
 	integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
 	crossorigin="anonymous">
+	
+		<script type="text/javascript">
+function forgotPasswordValidate(){
+	
+	var email = document.getElementById("email").value
+	
+	var regex=/^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
+	
+	if(email ==null||email==""){
+		document.getElementById("err_email").innerHTML="Email field can't be blank"
+		return false;
+	}
+	if(!(email ==null||email=="")){
+		document.getElementById("err_email").innerHTML=""
+		
+	}if(!(email.match(regex))){
+		document.getElementById("err_email").innerHTML="Email is not valid"
+		return false;
+	}
+	if((email.match(regex))){
+		document.getElementById("err_email").innerHTML=""
+	}
+	
+	}
+</script>
+
 </head>
 <style>
 
@@ -74,7 +100,7 @@ body, html {
 		</div>
 
 	</nav>
-	<form action="forgot.do" class="bag-img" method="post">
+	<form action="forgot.do" class="bag-img" method="post" onclick="return forgotPasswordValidate()">
 	<span style="color: white" > ${message}</span>	
 		<div>
 		<div class="row justify-content-center">
@@ -82,7 +108,10 @@ body, html {
 			<div class="col-sm-4 mt-5">
 				<input type="email" class="form-control" id="email"
 					name="email" placeholder="Email">
+					 <span id="err_email" style=" color: red"></span> 
 			</div>
+			
+			
 		</div>
 		</div>
 		
