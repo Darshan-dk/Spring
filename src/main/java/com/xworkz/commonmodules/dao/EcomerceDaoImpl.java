@@ -3,6 +3,7 @@ package com.xworkz.commonmodules.dao;
 import java.util.List;
 
 import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.log4j.Logger;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -18,12 +19,14 @@ import com.xworkz.commonmodules.exception.RepositoryException;
 
 @Repository
 public class EcomerceDaoImpl implements EcomerceDAO {
-	
+
+	static Logger logger = Logger.getLogger(EcomerceDaoImpl.class);
+
 	@Autowired
 	private SessionFactory factory;
 
 	public EcomerceDaoImpl() {
-		System.out.println("Created " + this.getClass().getSimpleName());
+		logger.info("Created " + this.getClass().getSimpleName());
 	}
 
 	@Override
@@ -36,6 +39,7 @@ public class EcomerceDaoImpl implements EcomerceDAO {
 			session = factory.openSession();
 			transaction = session.beginTransaction();
 			session.save(dto);
+			logger.info("Saved successfully");
 			transaction.commit();
 
 		} catch (HibernateException e) {
@@ -52,56 +56,58 @@ public class EcomerceDaoImpl implements EcomerceDAO {
 	}
 
 	public long fetchEmailCount(EcommerceDTO dto) throws RepositoryException {
-		Session session=null;
-		long n; 
-		String email=dto.getEmail();
+		Session session = null;
+		long n;
+		String email = dto.getEmail();
 		try {
-			session=factory.openSession();
-			Query query= session.createQuery("select count(*) from EcommerceDTO where email=:e ");
+			session = factory.openSession();
+			Query query = session.createQuery("select count(*) from EcommerceDTO where email=:e ");
 			query.setParameter("e", email);
-			n=(Long)query.uniqueResult();
-			//logger.debug(n);
-			System.out.println(n);
+			n = (Long) query.uniqueResult();
+			logger.debug(n);
+			logger.debug("fetchEmailCount is successful");
 		} catch (Exception e) {
-			
+
 			throw new RepositoryException(e.getMessage());
-			
+
 		}
 		return n;
 	}
 
 	public List<EcommerceDTO> fetchRow(EcommerceDTO dto) throws RepositoryException {
-		List<EcommerceDTO> list=null;
-		Session session=null;
+		List<EcommerceDTO> list = null;
+		Session session = null;
 		try {
-			session=factory.openSession();
-			Query query =session.createQuery("from EcommerceDTO where email=:e");
+			session = factory.openSession();
+			Query query = session.createQuery("from EcommerceDTO where email=:e");
 			query.setParameter("e", dto.getEmail());
-			list=(List<EcommerceDTO>)query.list();
-			
+			list = (List<EcommerceDTO>) query.list();
+			logger.debug("fetching the row data is scessfull");
+
 		} catch (Exception e) {
 			e.printStackTrace();
-		}finally {
-			session.close(); 
+		} finally {
+			session.close();
 		}
 		return list;
 	}
 
 	@Override
 	public String fetchPassword(EcommerceDTO dto) throws RepositoryException {
-		Session session=null;
-		String password=null;
+		Session session = null;
+		String password = null;
 		try {
-			session=factory.openSession();
-			Query query =session.createQuery("select password from EcommerceDTO where email=:e");
+			session = factory.openSession();
+			Query query = session.createQuery("select password from EcommerceDTO where email=:e");
 			query.setParameter("e", dto.getEmail());
-			password=(String)query.uniqueResult();
-			
+			password = (String) query.uniqueResult();
+			logger.debug("fetchPassword is successful");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return password;
 	}
+
 	@Override
 	public List<EcommerceDTO> fetchTable(EcommerceDTO dto) throws RepositoryException {
 		List<EcommerceDTO> list = null;
@@ -111,21 +117,16 @@ public class EcomerceDaoImpl implements EcomerceDAO {
 			Query query = session.createQuery("from EcommerceDTO ");
 
 			list = (List<EcommerceDTO>) query.list();
-
+			logger.debug("fetchTable is successful");
 		} catch (HibernateException e) {
-
 			throw new RepositoryException(e.getMessage());
-
-		}catch (Exception e) {
+		} catch (Exception e) {
 			throw new RepositoryException(e.getMessage());
 		} finally {
 			session.close();
 		}
 		return list;
 	}
-
-	
-	
 
 	@Override
 	public boolean isValidUser(EcommerceDTO dto) throws RepositoryException {
@@ -140,7 +141,9 @@ public class EcomerceDaoImpl implements EcomerceDAO {
 			count = (long) query.uniqueResult();
 			if (count > 0)
 				return true;
-		}catch (HibernateException e) {
+			logger.debug("User is valid");
+
+		} catch (HibernateException e) {
 
 			throw new RepositoryException(e.getMessage());
 
@@ -150,6 +153,7 @@ public class EcomerceDaoImpl implements EcomerceDAO {
 			session.close();
 		}
 		return false;
+
 	}
 
 	@Override
@@ -158,28 +162,26 @@ public class EcomerceDaoImpl implements EcomerceDAO {
 		String randomString = null;
 		Transaction transaction = null;
 		randomString = RandomStringUtils.random(5, true, false);
-		//logger.debug(randomString);
+		 logger.debug(randomString);
 		try {
+			logger.debug("Invoked update password");
+
 			session = factory.openSession();
 			transaction = session.beginTransaction();
 			Query query = session.createQuery("update EcommerceDTO set password=:p where email=:e");
 			query.setParameter("e", commerceDTO.getEmail());
 			query.setParameter("p", randomString);
-
 			int status = query.executeUpdate();
-			//logger.debug(status);
+			logger.debug(status);
 			transaction.commit();
 			return randomString;
 		} catch (HibernateException e) {
-
 			throw new RepositoryException(e.getMessage());
-
-		}catch (Exception e) {
+		} catch (Exception e) {
 			throw new RepositoryException(e.getMessage());
 		} finally {
 			session.close();
 		}
-		
 
 	}
 
@@ -196,11 +198,10 @@ public class EcomerceDaoImpl implements EcomerceDAO {
 			count = (long) query.uniqueResult();
 			if (count > 0)
 				return true;
+			logger.debug("OTP is valid");
 		} catch (HibernateException e) {
-
 			throw new RepositoryException(e.getMessage());
-
-		}catch (Exception e) {
+		} catch (Exception e) {
 			throw new RepositoryException(e.getMessage());
 		} finally {
 			session.close();
@@ -209,49 +210,47 @@ public class EcomerceDaoImpl implements EcomerceDAO {
 	}
 
 	@Override
-	public boolean resetPassword( ResetDTO resetDTO) throws RepositoryException {
+	public boolean resetPassword(ResetDTO resetDTO) throws RepositoryException {
 		Session session = null;
-
 		Transaction transaction = null;
-
 		try {
 			session = factory.openSession();
 			transaction = session.beginTransaction();
 			Query query = session.createQuery("update EcommerceDTO set password=:p where password=:q");
 			query.setParameter("p", resetDTO.getNewPassword());
 			query.setParameter("q", resetDTO.getPassword());
-			
-			
+
 			int status = query.executeUpdate();
-			//logger.debug(status);
+			 logger.debug(status);
 			transaction.commit();
+			logger.debug("resetPassword is completed");
 			return true;
-		}catch (HibernateException e) {
-
+		} catch (HibernateException e) {
 			throw new RepositoryException(e.getMessage());
-
 		} catch (Exception e) {
 			throw new RepositoryException(e.getMessage());
 		} finally {
 			session.close();
 		}
-		
 	}
+
 	@Override
-	public  Integer updateLoginFailCount(LoginDTO dto) throws RepositoryException {
+	public Integer updateLoginFailCount(LoginDTO dto) throws RepositoryException {
 		Session session = null;
 		int status = 0;
-		Transaction transaction=null;
+		Transaction transaction = null;
 		try {
 			session = factory.openSession();
-			transaction=session.beginTransaction();
-			Query query = session.createQuery("update EcommerceDTO set invalidLoginCount=invalidLoginCount+1 where email=:e");
+			transaction = session.beginTransaction();
+			Query query = session
+					.createQuery("update EcommerceDTO set invalidLoginCount=invalidLoginCount+1 where email=:e");
 			query.setParameter("e", dto.getEmail());
-			
-			 status=query.executeUpdate();
-			//logger.debug(status);
+
+			status = query.executeUpdate();
+			 logger.debug(status);
 			transaction.commit();
-		}catch (HibernateException e) {
+			logger.debug("updateLoginFailCount is completed");
+		} catch (HibernateException e) {
 			transaction.rollback();
 			throw new RepositoryException(e.getMessage());
 
@@ -260,25 +259,25 @@ public class EcomerceDaoImpl implements EcomerceDAO {
 		} finally {
 			session.close();
 		}
-		
-		return null;}
-	
+
+		return null;
+	}
+
 	@Override
 	public void updateLoginFailCountToZero(String email) throws RepositoryException {
 		Session session = null;
 		int status = 0;
-		Transaction transaction=null;
+		Transaction transaction = null;
 		try {
 			session = factory.openSession();
-			transaction=session.beginTransaction();
+			transaction = session.beginTransaction();
 			Query query = session.createQuery("update EcommerceDTO set invalidLoginCount=:c where email=:e");
 			query.setParameter("c", 0);
 			query.setParameter("e", email);
-			
-			 status=query.executeUpdate();
-			//logger.debug(status);
+			status = query.executeUpdate();
+			logger.debug(status);
 			transaction.commit();
-		}catch (HibernateException e) {
+		} catch (HibernateException e) {
 			transaction.rollback();
 			throw new RepositoryException(e.getMessage());
 
@@ -288,22 +287,22 @@ public class EcomerceDaoImpl implements EcomerceDAO {
 			session.close();
 		}
 	}
+
 	@Override
 	public void accountUnlocking(String email) throws RepositoryException {
 		Session session = null;
 		int status = 0;
-		Transaction transaction=null;
+		Transaction transaction = null;
 		try {
 			session = factory.openSession();
-			transaction=session.beginTransaction();
+			transaction = session.beginTransaction();
 			Query query = session.createQuery("update EcommerceDTO set accountStatusLocked=:c where email=:e");
-			query.setParameter("c",false);
+			query.setParameter("c", false);
 			query.setParameter("e", email);
-			
-			 status=query.executeUpdate();
-			//logger.debug(status);
+			status = query.executeUpdate();
+			logger.debug(status);
 			transaction.commit();
-		}catch (HibernateException e) {
+		} catch (HibernateException e) {
 			transaction.rollback();
 			throw new RepositoryException(e.getMessage());
 
@@ -318,18 +317,17 @@ public class EcomerceDaoImpl implements EcomerceDAO {
 	public void updateAccountLockedToFalse(String email) throws RepositoryException {
 		Session session = null;
 		int status = 0;
-		Transaction transaction=null;
+		Transaction transaction = null;
 		try {
 			session = factory.openSession();
-			transaction=session.beginTransaction();
+			transaction = session.beginTransaction();
 			Query query = session.createQuery("update EcommerceDTO set accountStatusLocked=:b where email=:e");
 			query.setParameter("b", false);
 			query.setParameter("e", email);
-			
-			 status=query.executeUpdate();
-			//logger.debug(status);
+			status = query.executeUpdate();
+			logger.debug(status);
 			transaction.commit();
-		}catch (HibernateException e) {
+		} catch (HibernateException e) {
 			transaction.rollback();
 			throw new RepositoryException(e.getMessage());
 
@@ -339,33 +337,32 @@ public class EcomerceDaoImpl implements EcomerceDAO {
 			session.close();
 		}
 	};
-	
+
 	@Override
-	public  boolean updateAccountLocked(LoginDTO loginDTO) throws RepositoryException {
+	public boolean updateAccountLocked(LoginDTO loginDTO) throws RepositoryException {
 		Session session = null;
 		int status = 0;
-		Transaction transaction=null;
+		Transaction transaction = null;
 		try {
 			session = factory.openSession();
-			transaction=session.beginTransaction();
+			transaction = session.beginTransaction();
 			Query query = session.createQuery("update EcommerceDTO set accountStatusLocked=:b where email=:e");
 			query.setParameter("b", true);
 			query.setParameter("e", loginDTO.getEmail());
-			
-			 status=query.executeUpdate();
-			//logger.debug(status);
+			status = query.executeUpdate();
+			logger.debug(status);
 			transaction.commit();
-		}catch (HibernateException e) {
+		} catch (HibernateException e) {
 			transaction.rollback();
 			throw new RepositoryException(e.getMessage());
-
 		} catch (Exception e) {
 			throw new RepositoryException(e.getMessage());
 		} finally {
 			session.close();
 		}
 		return false;
-		}
+	}
+
 	@Override
 	public List<EcommerceDTO> fetchRowByEmail(String email) throws RepositoryException {
 		List<EcommerceDTO> list = null;
@@ -375,18 +372,15 @@ public class EcomerceDaoImpl implements EcomerceDAO {
 			Query query = session.createQuery("from EcommerceDTO where email=:e");
 			query.setParameter("e", email);
 			System.out.println(email);
-			//logger.info(email);
+			logger.info(email);
 			list = (List<EcommerceDTO>) query.list();
-			//logger.info(list.size());
+			logger.info(list.size());
 			for (EcommerceDTO eCommerceDTO : list) {
 				System.out.println(eCommerceDTO);
-				//logger.info(eCommerceDTO);
+				logger.info(eCommerceDTO);
 			}
-
-		}catch (HibernateException e) {
-
+		} catch (HibernateException e) {
 			throw new RepositoryException(e.getMessage());
-
 		} catch (Exception e) {
 			throw new RepositoryException(e.getMessage());
 		} finally {
@@ -394,14 +388,13 @@ public class EcomerceDaoImpl implements EcomerceDAO {
 		}
 		return list;
 	}
+
 	@Override
 	public void updateNameByEmail(String email, String firstName, String secondName) throws RepositoryException {
-		
+
 		System.out.println("updateNameByEmail invoked");
 		Session session = null;
-
 		Transaction transaction = null;
-
 		try {
 			session = factory.openSession();
 			transaction = session.beginTransaction();
@@ -409,22 +402,19 @@ public class EcomerceDaoImpl implements EcomerceDAO {
 			query.setParameter("f", firstName);
 			query.setParameter("l", secondName);
 			query.setParameter("e", email);
-			
+
 			int status = query.executeUpdate();
 			System.out.println(status);
-			//logger.debug(status);
+			logger.debug(status);
 			transaction.commit();
-			
-		}catch (HibernateException e) {
 
+		} catch (HibernateException e) {
 			throw new RepositoryException(e.getMessage());
-
 		} catch (Exception e) {
 			throw new RepositoryException(e.getMessage());
 		} finally {
 			session.close();
 		}
 	}
-		
 
 }

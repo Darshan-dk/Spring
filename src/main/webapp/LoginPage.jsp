@@ -93,7 +93,7 @@ body, html {
   
 </nav>
 
-<form class="bag-img" action="login.do" method="post" id="form"
+<form class="bag-img" action="login" method="post" id="form"
 		onsubmit="return loginValidate()">
 		<span style="color: white"> ${message}</span>
   <div class="row justify-content-center">

@@ -1,6 +1,5 @@
 package com.xworkz.commonmodules.service;
 
-import java.sql.PreparedStatement;
 import java.util.List;
 import java.util.Objects;
 
@@ -11,8 +10,6 @@ import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
-
 import com.xworkz.commonmodules.dao.EcomerceDAO;
 import com.xworkz.commonmodules.dto.EcommerceDTO;
 import com.xworkz.commonmodules.dto.LoginDTO;
@@ -21,21 +18,17 @@ import com.xworkz.commonmodules.exception.RepositoryException;
 
 @Component
 public class EcommerceServiceImpl implements EcommerceService {
-
 	static Logger logger = Logger.getLogger(EcommerceServiceImpl.class);
-
 	@Autowired
 	private JavaMailSender mailSender;
-
 	@Autowired
 	private EcomerceDAO dao;
-	
 	@Autowired
 	private PasswordResetService passwordResetService;
 
 	public EcommerceServiceImpl() {
 
-		System.out.println("created " + this.getClass().getSimpleName());
+		logger.info("created " + this.getClass().getSimpleName());
 	}
 
 	@Override
@@ -48,21 +41,21 @@ public class EcommerceServiceImpl implements EcommerceService {
 			if (!fName.isEmpty() && fName.length() >= 3) {
 				valid = true;
 
-				System.out.println("Name is valid");
+				logger.info("Name is valid");
 			} else {
 				valid = false;
-				System.out.println("Name is invalid");
+				logger.info("Name is invalid");
 			}
 			if (valid) {
 				if (Objects.nonNull(dto)) {
 					String sName = dto.getSecondName();
-					if (!sName.isEmpty() && sName.length() >= 3) {
+					if (!sName.isEmpty() && sName.length() > 0) {
 						valid = true;
 
-						System.out.println("last name  is valid");
+						logger.info("last name  is valid");
 					} else {
 						valid = false;
-						System.out.println("last name is invalid");
+						logger.info("last name is invalid");
 					}
 				}
 			}
@@ -71,10 +64,10 @@ public class EcommerceServiceImpl implements EcommerceService {
 				String cPass = dto.getPassword();
 				if (pass.equals(cPass)) {
 					valid = true;
-					System.out.println("Passwords matching");
+					logger.info("Passwords matching");
 				} else {
 					valid = false;
-					System.out.println("Pasword is not matching");
+					logger.info("Pasword is not matching");
 				}
 			}
 			if (valid) {
@@ -83,10 +76,10 @@ public class EcommerceServiceImpl implements EcommerceService {
 				String regex = "^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$";
 				if (email.matches(regex)) {
 					valid = true;
-					System.out.println("Email is valid");
+					logger.info("Email is valid");
 				} else {
 					valid = false;
-					System.out.println("Email is invalid");
+					logger.info("Email is invalid");
 				}
 			}
 			if (valid) {
@@ -96,7 +89,7 @@ public class EcommerceServiceImpl implements EcommerceService {
 						message = "duplicate";
 					} else {
 						dao.save(dto);
-						System.out.println("Inputs are valid and saving");
+						logger.info("Inputs are valid and saving");
 						message = "saved";
 					}
 				} catch (RepositoryException e) {
@@ -107,38 +100,36 @@ public class EcommerceServiceImpl implements EcommerceService {
 				}
 
 			} else {
-				System.out.println("Inputs are invalid and not saving");
+				logger.info("Inputs are invalid and not saving");
 			}
 
 		} else {
-			System.out.println("No Inputs");
+			logger.info("No Inputs");
 		}
 
 		return message;
 	}
 
 	@Override
-	public List<EcommerceDTO> loginDetails(EcommerceDTO dto) throws RepositoryException{
-		List<EcommerceDTO> list=dao.fetchRow(dto);
+	public List<EcommerceDTO> loginDetails(EcommerceDTO dto) throws RepositoryException {
+		List<EcommerceDTO> list = dao.fetchRow(dto);
 		return list;
-		
-		
+
 	}
 
-	public String validateAndLogin(EcommerceDTO dto,LoginDTO loginDTO) throws ServiceException {
-		String message=null;
-		boolean accountLocked=false;
-		int failedLogin=0;
+	public String validateAndLogin(EcommerceDTO dto, LoginDTO loginDTO) throws ServiceException {
+		String message = null;
+		boolean accountLocked = false;
+		int failedLogin = 0;
 		try {
 			List<EcommerceDTO> list = dao.fetchRow(dto);
-			
-			
+
 			for (EcommerceDTO eCommerceDTO : list) {
-			accountLocked=eCommerceDTO.isAccountStatusLocked();
-			
-			logger.info("Account locked "+accountLocked);
-			
-			if(accountLocked==false){
+				accountLocked = eCommerceDTO.isAccountStatusLocked();
+
+				logger.info("Account locked " + accountLocked);
+
+				if (accountLocked == false) {
 					if (list.size() == 1) {
 
 						logger.info(eCommerceDTO.getFirstName());
@@ -152,36 +143,36 @@ public class EcommerceServiceImpl implements EcommerceService {
 						}
 
 						else {
-							failedLogin= eCommerceDTO.getInvalidLoginCount();
-							
-							if (failedLogin < 3){
+							failedLogin = eCommerceDTO.getInvalidLoginCount();
+
+							if (failedLogin < 3) {
 								dao.updateLoginFailCount(loginDTO);
-								message="notMatching";
+								message = "notMatching";
 								logger.info("password not matching");
 							}
-							
-							else{
+
+							else {
 								dao.updateAccountLocked(loginDTO);
 								message = "trialsExceeded";
 								logger.info("trials exceeded");
 							}
-							
+
 							logger.info(eCommerceDTO);
-							}
-						
-					}else {
+						}
+
+					} else {
 
 						logger.info("User not registered");
 						message = "notRegistered";
-							}
-				} if(accountLocked==true) {
+					}
+				}
+				if (accountLocked == true) {
 
 					logger.info("Account Locked");
 					message = "locked";
-						}
+				}
 
 			}
-			
 
 		} catch (RepositoryException e) {
 
@@ -206,19 +197,20 @@ public class EcommerceServiceImpl implements EcommerceService {
 	}
 
 	@Override
-	public boolean resetPassword(EcommerceDTO dto, LoginDTO loginDTO) throws ServiceException, com.xworkz.commonmodules.exception.ServiceException {
+	public boolean resetPassword(EcommerceDTO dto, LoginDTO loginDTO)
+			throws ServiceException, com.xworkz.commonmodules.exception.ServiceException {
 		logger.debug("Invoked reset password method");
 		try {
 			long count = dao.fetchEmailCount(dto);
 			logger.debug(count);
 			if (count == 1) {
 				String oTP = dao.updatePassword(dto);
-				List<EcommerceDTO>list= dao.fetchRow(dto);
+				List<EcommerceDTO> list = dao.fetchRow(dto);
 				for (EcommerceDTO eCommerceDTO : list) {
 					boolean sent = passwordResetService.sendMail(eCommerceDTO, oTP);
 					logger.debug("Email sent " + sent);
 				}
-				
+
 				dao.accountUnlocking(loginDTO.getEmail());
 
 				return true;
@@ -231,7 +223,7 @@ public class EcommerceServiceImpl implements EcommerceService {
 	}
 
 	@Override
-	public String validateAndUpdatePassword( ResetDTO resetDTO) throws ServiceException {
+	public String validateAndUpdatePassword(ResetDTO resetDTO) throws ServiceException {
 
 		logger.debug("invoked validateAndUpdatePassword");
 		String message = "NA";
@@ -242,13 +234,13 @@ public class EcommerceServiceImpl implements EcommerceService {
 				valid = true;
 			}
 			if (valid) {
-				if (resetDTO.getNewPassword().equals( resetDTO.getCPassword())) {
+				if (resetDTO.getNewPassword().equals(resetDTO.getCPassword())) {
 
 					boolean validOtp = dao.isValidOtp(resetDTO);
 					logger.debug(validOtp);
-					
+
 					if (validOtp) {
-						dao.resetPassword( resetDTO);
+						dao.resetPassword(resetDTO);
 						logger.debug("otp is valid and password updated");
 						return "valid";
 					} else {
@@ -274,14 +266,12 @@ public class EcommerceServiceImpl implements EcommerceService {
 
 	@Override
 	public boolean sendMail(EcommerceDTO commerceDTO) throws ServiceException {
-
 		SimpleMailMessage mailMessage = new SimpleMailMessage();
 		mailMessage.setTo(commerceDTO.getEmail());
 		mailMessage.setSubject("Xworkz common module registration");
 		mailMessage.setText("Hi " + commerceDTO.getFirstName() + "\n" + "\n"
 				+ " your registraion is successful please login with username and password" + "\n" + "\n" + "\n"
 				+ "Thanks," + "\n" + "X-workz");
-
 		try {
 			mailSender.send(mailMessage);
 			return true;
@@ -291,10 +281,9 @@ public class EcommerceServiceImpl implements EcommerceService {
 			// throw new ServiceException(e.getMessage());
 
 		}
-
 		return false;
-
 	}
+
 	@Override
 	public List<EcommerceDTO> loginDetails(String email) throws ServiceException {
 		List<EcommerceDTO> list;
@@ -305,24 +294,14 @@ public class EcommerceServiceImpl implements EcommerceService {
 		} catch (RepositoryException e) {
 			throw new ServiceException(e.getMessage());
 		}
-		return list;
-		
-		
-	}
+				return list;
+				}
 	@Override
-	public void updateNameByEmail(String email,String fName,String lName) throws ServiceException {
+	public void updateNameByEmail(String email, String fName, String lName) throws ServiceException {
 		try {
-			dao.updateNameByEmail(email,fName,lName);
+			dao.updateNameByEmail(email, fName, lName);
 		} catch (RepositoryException e) {
-			
 			throw new ServiceException(e.getMessage());
 		}
-		
 	}
-	
-
-
-
-	
-
 }

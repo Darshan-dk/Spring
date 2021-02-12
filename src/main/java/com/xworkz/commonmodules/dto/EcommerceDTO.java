@@ -1,6 +1,5 @@
 package com.xworkz.commonmodules.dto;
 
-import java.io.Serializable;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -19,7 +18,7 @@ import lombok.ToString;
 @ToString
 @Entity
 @Table(name = "Ecomerce_data")
-public class EcommerceDTO implements Serializable {
+public class EcommerceDTO  {
 
 	@Id
 	@GenericGenerator(name = "ref", strategy = "increment")

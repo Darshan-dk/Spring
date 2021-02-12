@@ -42,7 +42,7 @@ function updateValidate(){
 <body>
 	<nav class="navbar navbar-expand-lg navbar-dark bg-dark"> <a
 		class="navbar-brand" href="#">E-Commerce</a> <a class="navbar-brand"
-		href="spring-cm-page/Home.jsp">Home</a> </nav>
+		href="LandingPage.jsp">Home</a> </nav>
 
 	<div class="">
 		<div class="container ">
