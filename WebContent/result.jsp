@@ -8,7 +8,7 @@
 <title>Insert title here</title>
 </head>
 <body>
-<h3>Display page</h3>
+<h3>Display Page</h3>
 <form action="display.do" method="post">
 <input type="submit" value="showResult"/>
 
