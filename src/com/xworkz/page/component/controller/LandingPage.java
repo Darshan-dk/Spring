@@ -1,4 +1,4 @@
-package com.xworkz.page.component;
+package com.xworkz.page.component.controller;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -7,6 +7,7 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpSession;
 
 import org.omg.CORBA.PUBLIC_MEMBER;
 import org.springframework.stereotype.Component;
@@ -17,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 
-import com.xworkz.page.dto.CoronaPatientDTO;
+import com.xworkz.page.component.dto.CoronaPatientDTO;
 
 @Component
 @RequestMapping("/")
@@ -39,10 +40,10 @@ public class LandingPage {
 	}
 
 	@RequestMapping(value = "/landing.do")
-	public String landingPage( Model model)
+	public String landingPage( Model model, HttpSession httpSession)
 			throws ServletException, IOException {
 		System.out.println("Invoked landingPage");
-		model.addAttribute("states",this.states);
+		httpSession.setAttribute("states",this.states);
 		return "index";
 	
 			}
